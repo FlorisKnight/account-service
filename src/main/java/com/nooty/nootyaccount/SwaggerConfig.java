@@ -3,6 +3,7 @@ package com.nooty.nootyaccount;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
@@ -14,6 +15,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableSwagger2
+@RequestMapping("/account/explorer")
 public class SwaggerConfig {
     @Bean
     public Docket swagger() {

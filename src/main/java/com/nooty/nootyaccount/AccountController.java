@@ -32,16 +32,17 @@ public class AccountController {
         user.setPassword(passwordHasher(createViewModel.getPassword()));
 
         Optional<User> userOptional = this.accountRepo.findByEmail(user.getEmail());
-        if (!userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             return ResponseEntity.status(404).build();
         }
         userOptional = this.accountRepo.findByUsername(user.getUsername());
-        if (!userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             return ResponseEntity.status(404).build();
         }
 
         this.accountRepo.save(user);
-        return ResponseEntity.ok().build();
+        user.setPassword(null);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")

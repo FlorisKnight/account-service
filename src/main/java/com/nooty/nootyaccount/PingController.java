@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/account")
 public class PingController {
 
-    @GetMapping(path = "/", produces = "application/json")
+    @GetMapping(path = "/ping", produces = "application/json")
     public ResponseEntity get() {
 
         return ResponseEntity.ok("Pong");

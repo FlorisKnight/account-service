@@ -1,9 +1,11 @@
 package com.nooty.nootyaccount;
 
 import com.nooty.nootyaccount.models.User;
+import com.nooty.nootyaccount.util.JwtUtil;
 import com.nooty.nootyaccount.viewmodels.CreateViewModel;
 import com.nooty.nootyaccount.viewmodels.LoginViewModel;
 import com.nooty.nootyaccount.viewmodels.UpdateViewModel;
+import com.nooty.nootyaccount.viewmodels.UserResponseViewModel;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class AccountController {
 
     @Autowired
     private AccountRepo accountRepo;
+
+    @Autowired
+    private JwtUtil jwtTokenUtil;
 
     @PostMapping(path = "/register", produces = "application/json")
     public ResponseEntity create(@RequestBody CreateViewModel createViewModel) {
@@ -41,8 +46,8 @@ public class AccountController {
         }
 
         this.accountRepo.save(user);
-        user.setPassword(null);
-        return ResponseEntity.ok(user);
+        UserResponseViewModel u = new UserResponseViewModel(user, jwtTokenUtil.generateToken(user));
+        return ResponseEntity.ok(u);
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
@@ -69,8 +74,8 @@ public class AccountController {
             return ResponseEntity.status(404).build();
         }
 
-        user.setPassword(null);
-        return ResponseEntity.ok(user);
+        UserResponseViewModel u = new UserResponseViewModel(user, jwtTokenUtil.generateToken(user));
+        return ResponseEntity.ok(u);
     }
 
     @PatchMapping(path = "/update/{id}", produces = "application/json")
@@ -106,6 +111,16 @@ public class AccountController {
         User user = userOptional.get();
         this.accountRepo.delete(user);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/auth", produces = "application/json")
+    public ResponseEntity authorize(@RequestBody UserResponseViewModel userResponseViewModel) {
+
+        if (jwtTokenUtil.validateToken(userResponseViewModel.getToken(), userResponseViewModel)) {
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.status(401).build();
     }
 
     private String passwordHasher(String pass){

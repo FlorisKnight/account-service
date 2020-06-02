@@ -20,12 +20,11 @@ import java.util.UUID;
 @RequestMapping("/account")
 public class AccountController {
     PasswordStorage passwordStorage = new PasswordStorage();
+    private JwtUtil jwtTokenUtil = new JwtUtil();
 
     @Autowired
     private AccountRepo accountRepo;
 
-    @Autowired
-    private JwtUtil jwtTokenUtil;
 
     @PostMapping(path = "/register", produces = "application/json")
     public ResponseEntity create(@RequestBody CreateViewModel createViewModel) {

@@ -1,8 +1,9 @@
 package com.nooty.nootyaccount.util;
 
 import com.nooty.nootyaccount.models.User;
-import org.springframework.stereotype.Service;
 import io.jsonwebtoken.*;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
